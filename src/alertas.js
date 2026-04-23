@@ -221,7 +221,7 @@ async function verificarEEnviarAlertas() {
   for (const evento of EVENTOS) {
     const dias = diasAte(evento.mes, evento.dia);
 
-    if (dias === 5 || dias > 0) {
+    if (dias !== 0) {
       console.log(`🔔 Alerta: "${evento.nome}" em ${dias} dias (${formatarDataCurta(evento.mes, evento.dia)})`);
 
       const responsavelIndex = rodizioIndex % DESIGNERS.length;
