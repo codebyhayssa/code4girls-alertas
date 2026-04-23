@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
@@ -20,7 +22,9 @@ jobs:
           node-version: '20'
 
       - name: Instalar dependências
-        run: npm install
+        run: |
+          rm -rf node_modules
+          npm install
 
       - name: Executar script de alertas
         run: node src/alertas.js
@@ -28,3 +32,11 @@ jobs:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           DESIGNERS_EMAILS: ${{ secrets.DESIGNERS_EMAILS }}
+
+      - name: Salvar rodizio no repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add rodizio.json
+          git diff --staged --quiet || git commit -m "chore: atualizar rodizio [skip ci]"
+          git push
