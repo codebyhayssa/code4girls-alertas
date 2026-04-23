@@ -33,7 +33,7 @@ const EVENTOS = [
   { mes: 3,  dia: 4,  nome: 'Dia da Internet',                desc: 'Acesso digital é pauta de inclusão — relevante para a comunidade.',                      tipo: 'Programação' },
   { mes: 3,  dia: 22, nome: 'Dia do Design Gráfico',          desc: 'Celebração ao design gráfico, identidade visual e criatividade.',                        tipo: 'Design' },
   { mes: 3,  dia: 23, nome: 'Dia do Livro Técnico',           desc: 'Incentivo ao estudo e desenvolvimento profissional.',                                    tipo: 'IA & Dados' },
-  { mes: 4,  dia: 25, nome: 'Dia do Geek',                    desc: 'Identidade geek feminina é forte no Code4Girl.',                                         tipo: 'Cultura tech' },
+  { mes: 4,  dia: 28, nome: 'Dia do Geek',                    desc: 'Identidade geek feminina é forte no Code4Girl.',                                         tipo: 'Cultura tech' },
   { mes: 5,  dia: 6,  nome: 'Dia do Python',                  desc: 'Python é a linguagem mais acessível para iniciantes — muito usada no Code4Girl.',        tipo: 'Programação' },
   { mes: 5,  dia: 12, nome: 'Dia do Dev Mobile',              desc: 'Mobile é área de alta empregabilidade para mulheres devs.',                              tipo: 'Desenvolvimento Web' },
   { mes: 5,  dia: 27, nome: 'Dia Mundial do UX',              desc: 'UX e design centrado em pessoas: área com muitas mulheres.',                             tipo: 'Design' },
