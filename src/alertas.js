@@ -220,6 +220,7 @@ async function verificarEEnviarAlertas() {
 
   for (const evento of EVENTOS) {
     const dias = diasAte(evento.mes, evento.dia);
+    console.log(`DEBUG: ${evento.nome} — dias: ${dias}`);
 
     if (dias !== 0) {
       console.log(`🔔 Alerta: "${evento.nome}" em ${dias} dias (${formatarDataCurta(evento.mes, evento.dia)})`);
