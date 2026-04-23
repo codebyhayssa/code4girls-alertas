@@ -1,167 +1,265 @@
-# Code4Girl — Alertas Automáticos de Arte 💜
+# AccessPIM — Sistema de Controle de Acesso por Área
 
-Sistema que envia e-mail automático para os designers da comunidade **5 dias antes** de cada data comemorativa do calendário tech 2026.
+> Sistema web full stack para registro e monitoramento de acesso a áreas restritas do Polo Industrial de Manaus. Substitui controles manuais (papel, planilha) por um fluxo digital rastreável, com dashboard em tempo real e histórico consultável.
 
----
-
-## Como funciona
-
-Todo dia às **9h (horário de Brasília)**, o GitHub Actions executa o script. Se algum evento estiver a exatamente 5 dias, um e-mail de alerta é disparado automaticamente para os designers com:
-
-- Nome e data do evento
-- Categoria (Design, Programação, IA & Dados etc.)
-- Prazo de entrega da arte (véspera do evento)
-- Descrição do tema para inspirar a criação
+**Stack:** Angular 21 · Node.js 24 · Express · PostgreSQL · Tailwind CSS · JWT (HttpOnly Cookie) · SSE (Server-Sent Events)
 
 ---
 
-## Configuração passo a passo
+## Sumário
 
-### 1. Criar conta no Resend (envio de e-mails)
-
-1. Acesse [resend.com](https://resend.com) e crie uma conta gratuita
-2. Vá em **API Keys** → **Create API Key**
-3. Copie a chave gerada (começa com `re_...`)
-4. Em **Domains**, adicione e verifique o domínio do Code4Girl (`code4girl.com.br`) — necessário para enviar como `alertas@code4girl.com.br`
-
-> **Plano gratuito**: até 3.000 e-mails/mês — mais do que suficiente para os alertas.
-
----
-
-### 2. Criar repositório no GitHub
-
-1. Crie um repositório público ou privado no GitHub (ex: `code4girl-alertas`)
-2. Faça upload de todos os arquivos deste projeto
-3. Confirme que a estrutura está assim:
-
-```
-code4girl-alertas/
-├── .github/
-│   └── workflows/
-│       └── alertas.yml
-├── src/
-│   └── alertas.js
-├── package.json
-└── README.md
-```
+- [Funcionalidades](#funcionalidades)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Variáveis de Ambiente](#variáveis-de-ambiente)
+- [Banco de Dados](#banco-de-dados)
+- [Rodando o Projeto](#rodando-o-projeto)
+- [Usuários de Teste](#usuários-de-teste)
+- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Endpoints da API](#endpoints-da-api)
+- [Perfis e Permissões](#perfis-e-permissões)
 
 ---
 
-### 3. Configurar os Secrets no GitHub
+## Funcionalidades
 
-No repositório, vá em **Settings → Secrets and variables → Actions → New repository secret** e adicione:
-
-| Secret | Valor | Exemplo |
-|--------|-------|---------|
-| `RESEND_API_KEY` | Sua chave da API do Resend | `re_abc123...` |
-| `DESIGNERS_EMAILS` | E-mails separados por vírgula | `ana@code4girl.com.br,bia@gmail.com` |
-| `EMAIL_REMETENTE` | E-mail de envio (do seu domínio) | `alertas@code4girl.com.br` |
+### MVP (Trio)
+- ✅ **Autenticação** com JWT armazenado em cookie HttpOnly
+- ✅ **Dashboard em tempo real** com 4 indicadores e últimas atividades via SSE
+- ✅ **CRUD de Colaboradores** com busca, filtro por setor, foto e importação via CSV
+- ✅ **CRUD de Áreas** com níveis de risco (baixo / médio / alto / crítico) e capacidade máxima
+- ✅ **Registro de Acesso** com verificação automática de autorização por cargo/colaborador
+- ✅ **Histórico de Acessos** com filtros por período, área e colaborador + paginação
+- ✅ **Exportação CSV** do histórico filtrado
+- ✅ **Autorizações automáticas** por cargo ou por colaborador individual, com suporte a bloqueios explícitos
+- ✅ **Gestão de Usuários** do sistema (admin, gestor, operador)
+- ✅ **Controle de acesso por perfil** (roleGuard em todas as rotas sensíveis)
+- ✅ **Tema claro/escuro** persistente
+- ✅ **Eventos em tempo real** (SSE): dashboard e histórico atualizam automaticamente ao registrar um acesso
 
 ---
 
-### 4. Testar manualmente
+## Pré-requisitos
 
-Para testar sem esperar o horário agendado:
+- [Node.js](https://nodejs.org/) v20 ou superior
+- [PostgreSQL](https://www.postgresql.org/) v15 ou superior
+- [Angular CLI](https://angular.io/cli) v17 ou superior (`npm install -g @angular/cli`)
+- (Opcional) [Docker](https://www.docker.com/) para subir o banco sem instalar PostgreSQL localmente
 
-1. Vá em **Actions** no repositório
-2. Clique em **Alertas Code4Girl**
-3. Clique em **Run workflow** → **Run workflow**
-4. Acompanhe o log em tempo real
+---
 
-Se tudo estiver certo, você verá algo assim no log:
+## Instalação
 
-```
-📅 Verificando alertas — 23/04/2026
-📧 Designers: ana@code4girl.com.br, bia@gmail.com
+### 1. Clonar o repositório
 
-   · "Dia do Geek" — faltam 2 dias (25/05/2026)
-   · "Dia do Python" — faltam 8 dias (06/06/2026)
-
-✨ Concluído. 0 alerta(s) enviado(s).
+```bash
+git clone https://github.com/seu-usuario/Controle_de_Acesso.git
+cd Controle_de_Acesso
 ```
 
-Quando um evento estiver a exatamente 5 dias:
+### 2. Instalar dependências do backend
 
+```bash
+cd backend
+npm install
 ```
-🔔 Alerta: "Dia do Python" em 5 dias (06/06/2026)
-  ✅ E-mail enviado! ID: abc123xyz
+
+### 3. Instalar dependências do frontend
+
+```bash
+cd ../frontend
+npm install
 ```
 
 ---
 
-## Adicionar ou remover designers
+## Variáveis de Ambiente
 
-Atualize o Secret `DESIGNERS_EMAILS` no GitHub com os e-mails separados por vírgula:
+Dentro da pasta `backend/`, crie um arquivo `.env` com base no exemplo abaixo:
 
-```
-ana@code4girl.com.br,bia@gmail.com,carol@outlook.com
-```
-
-Não precisa alterar código — só o secret.
-
----
-
-## Adicionar novos eventos
-
-Edite o arquivo `src/alertas.js` e adicione na lista `EVENTOS`:
-
-```js
-{ mes: 3, dia: 15, nome: 'Novo Evento', desc: 'Descrição do evento.', tipo: 'Programação' },
+```ini
+PORT=3000
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/accesspim
+JWT_SECRET=troque_por_uma_chave_secreta_longa_e_aleatoria
 ```
 
-Os meses começam em 0 (janeiro = 0, dezembro = 11).
+> ⚠️ **Nunca faça commit do arquivo `.env`.** Ele já está no `.gitignore`.
 
 ---
 
-## Calendário — 36 eventos ativos
+## Banco de Dados
 
-| Data | Evento | Categoria |
-|------|--------|-----------|
-| 01/01 | Dia da Programação | Programação |
-| 14/01 | Dia do Lógico | IA & Dados |
-| 28/01 | Dia do Dev de Dados | IA & Dados |
-| 11/02 | Mulheres na Ciência | Mulheres em tech |
-| 14/02 | Dia da Tipografia | Design |
-| 04/03 | Dia Nacional do Programador | Programação |
-| 08/03 | Dia Internacional da Mulher | Mulheres em tech |
-| 12/03 | Dia do Software Livre | Open Source |
-| 14/03 | Pi Day | Cultura tech |
-| 25/03 | Aniversário da Web | Desenvolvimento Web |
-| 04/04 | Dia da Internet | Programação |
-| 22/04 | Dia do Design Gráfico | Design |
-| 23/04 | Dia do Livro Técnico | IA & Dados |
-| 25/05 | Dia do Geek | Cultura tech |
-| 06/06 | Dia do Python | Programação |
-| 12/06 | Dia do Dev Mobile | Desenvolvimento Web |
-| 27/06 | Dia Mundial do UX | Design |
-| 28/06 | Dia do Dev Front-end | Desenvolvimento Web |
-| 17/07 | Dia do Emoji | Design |
-| 20/07 | Dia do Game | Cultura tech |
-| 30/07 | Dia do LLM & IA Generativa | IA & Dados |
-| 09/08 | Dia da Juventude em TI | Mulheres em tech |
-| 12/08 | Dia do Cientista da Computação | IA & Dados |
-| 29/08 | Dia do Dev Back-end | Desenvolvimento Web |
-| 13/09 | Dia do Programador | Programação |
-| 16/09 | Dia da Ciência de Dados | IA & Dados |
-| 22/09 | Dia do QA | Qualidade |
-| 24/09 | Dia do Design de Produto | Design |
-| 04/10 | Aniversário de Alan Turing | IA & Dados |
-| 10/10 | Ada Lovelace Day | Mulheres em tech |
-| 13/10 | Dia do Design de Interação | Design |
-| 28/10 | Dia do Acesso à Internet | Programação |
-| 13/11 | Dia do UX Writing | Design |
-| 30/11 | Dia do Dev Web | Desenvolvimento Web |
-| 09/12 | Dia do Software | Programação |
-| 13/12 | Geek Girl Day | Mulheres em tech |
+### Opção A — Docker (recomendado)
+
+```bash
+# Na raiz do projeto
+docker-compose up -d
+```
+
+O banco `accesspim` será criado automaticamente na porta `5432`.  
+O pgAdmin estará disponível em `http://localhost:8080` (admin@admin.com / admin).
+
+### Opção B — PostgreSQL local
+
+Crie o banco manualmente e configure o `DATABASE_URL` no `.env`:
+
+```bash
+psql -U postgres -c "CREATE DATABASE accesspim;"
+```
+
+### Aplicar o schema e seed
+
+```bash
+# A partir da raiz do projeto
+psql -d accesspim -f db/schema.sql
+psql -d accesspim -f db/seed.sql
+```
+
+Ou, pelo script do Node:
+
+```bash
+cd backend
+node reset_db.js
+```
 
 ---
 
-## Tecnologias usadas
+## Rodando o Projeto
 
-- **[Resend](https://resend.com)** — envio de e-mails transacionais
-- **[GitHub Actions](https://docs.github.com/actions)** — agendamento e execução automática
-- **Node.js** — script principal
+### Backend
+
+```bash
+cd backend
+npm run dev
+# Servidor disponível em http://localhost:3000
+```
+
+### Frontend
+
+```bash
+cd frontend
+ng serve
+# Aplicação disponível em http://localhost:4200
+```
 
 ---
 
-*Feito com 💜 para a comunidade Code4Girl*
+## Usuários de Teste
+
+Após executar o `seed.sql`, os seguintes usuários estarão disponíveis:
+
+| Perfil    | E-mail                        | Senha      |
+|-----------|-------------------------------|------------|
+| Admin     | admin@accesspim.com.br        | access123  |
+| Gestor    | gestor@accesspim.com.br       | access123  |
+| Operador  | operador@accesspim.com.br     | access123  |
+
+---
+
+## Estrutura de Pastas
+
+```
+Controle_de_Acesso/
+├── backend/
+│   ├── controllers/        # Lógica de negócio por entidade
+│   ├── middleware/         # authMiddleware (JWT) e roleMiddleware (perfil)
+│   ├── routes/             # Definição das rotas Express
+│   ├── services/           # eventBus (SSE broadcast)
+│   ├── db.js               # Pool de conexão com PostgreSQL
+│   └── server.js           # Entrada da aplicação
+├── frontend/
+│   └── src/app/
+│       ├── components/     # Componentes Angular por feature
+│       ├── guards/         # authGuard e roleGuard
+│       ├── interceptors/   # Interceptor HTTP (JWT + tratamento de erros)
+│       ├── models/         # Interfaces TypeScript
+│       └── services/       # Serviços de comunicação com a API
+├── db/
+│   ├── schema.sql          # DDL: criação das tabelas e índices
+│   └── seed.sql            # DML: dados iniciais para demonstração
+└── docker-compose.yml      # PostgreSQL + pgAdmin via Docker
+```
+
+---
+
+## Endpoints da API
+
+Todos os endpoints abaixo (exceto `/api/auth/login`) exigem autenticação via cookie JWT.
+
+### Autenticação
+| Método | Rota                          | Descrição                         |
+|--------|-------------------------------|-----------------------------------|
+| POST   | `/api/auth/login`             | Login — retorna cookie JWT        |
+| GET    | `/api/auth/me`                | Retorna usuário da sessão ativa   |
+| POST   | `/api/auth/logout`            | Invalida a sessão                 |
+| PATCH  | `/api/auth/change-password`   | Altera senha do usuário logado    |
+
+### Dashboard
+| Método | Rota             | Descrição                                  |
+|--------|------------------|--------------------------------------------|
+| GET    | `/api/dashboard` | Retorna os 4 KPIs e os últimos 5 registros |
+
+### Colaboradores
+| Método | Rota                                  | Perfil    |
+|--------|---------------------------------------|-----------|
+| GET    | `/api/colaboradores`                  | Todos     |
+| GET    | `/api/colaboradores/:id`              | Todos     |
+| POST   | `/api/colaboradores`                  | Admin     |
+| PUT    | `/api/colaboradores/:id`              | Admin     |
+| PATCH  | `/api/colaboradores/:id/status`       | Admin     |
+| POST   | `/api/colaboradores/import/analisar`  | Admin     |
+| POST   | `/api/colaboradores/import/confirmar` | Admin     |
+
+### Áreas
+| Método | Rota                         | Perfil |
+|--------|------------------------------|--------|
+| GET    | `/api/areas`                 | Todos  |
+| GET    | `/api/areas/:id`             | Todos  |
+| POST   | `/api/areas`                 | Admin  |
+| PUT    | `/api/areas/:id`             | Admin  |
+| PATCH  | `/api/areas/:id/status`      | Admin  |
+
+### Registros de Acesso
+| Método | Rota                    | Descrição                      |
+|--------|-------------------------|--------------------------------|
+| GET    | `/api/registros`        | Histórico paginado com filtros |
+| POST   | `/api/registros`        | Registrar entrada ou saída     |
+| GET    | `/api/registros/export` | Exportar histórico em CSV      |
+
+### Autorizações
+| Método | Rota                           | Perfil      |
+|--------|--------------------------------|-------------|
+| GET    | `/api/autorizacoes`            | Admin       |
+| POST   | `/api/autorizacoes`            | Admin       |
+| PATCH  | `/api/autorizacoes/:id/status` | Admin       |
+| GET    | `/api/autorizacoes/validar`    | Operador/Admin |
+
+### Eventos (SSE)
+| Método | Rota          | Descrição                                    |
+|--------|---------------|----------------------------------------------|
+| GET    | `/api/events` | Stream de eventos em tempo real (SSE)        |
+
+---
+
+## Perfis e Permissões
+
+| Funcionalidade           | Admin | Gestor | Operador |
+|--------------------------|:-----:|:------:|:--------:|
+| Dashboard                | ✅    | ✅     | ❌       |
+| Ver Colaboradores        | ✅    | ✅     | ✅       |
+| Criar/Editar Colaborador | ✅    | ❌     | ❌       |
+| Ver Áreas                | ✅    | ✅     | ✅       |
+| Criar/Editar Área        | ✅    | ❌     | ❌       |
+| Registrar Acesso         | ✅    | ❌     | ✅       |
+| Ver Histórico            | ✅    | ✅     | ✅*      |
+| Exportar CSV             | ✅    | ✅     | ❌       |
+| Gerenciar Autorizações   | ✅    | ❌     | ❌       |
+| Gerenciar Usuários       | ✅    | ❌     | ❌       |
+
+> \* Operadores visualizam apenas os registros feitos por eles mesmos.
+
+---
+
+## Licença
+
+Projeto desenvolvido para fins acadêmicos no programa de capacitação Full Stack do **INDT** — Instituto Nokia de Tecnologia, Manaus/AM.
