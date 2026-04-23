@@ -200,6 +200,29 @@ function gerarHtml(evento, diasRestantes, responsavel) {
 </html>`;
 }
 
+// ─── Rodízio persistente ─────────────────────────────────────────────────────
+const fs = require('fs');
+const RODIZIO_FILE = 'rodizio.json';
+
+function lerRodizioIndex() {
+  try {
+    const data = JSON.parse(fs.readFileSync(RODIZIO_FILE, 'utf8'));
+    console.log(`🔄 Rodízio atual: índice ${data.index} (${data.ultima_responsavel || 'primeira vez'})`);
+    return data.index || 0;
+  } catch {
+    console.log('🔄 Rodízio iniciando do zero.');
+    return 0;
+  }
+}
+
+function salvarRodizioIndex(index, responsavel) {
+  fs.writeFileSync(RODIZIO_FILE, JSON.stringify({
+    index,
+    ultima_responsavel: responsavel,
+    atualizado_em: new Date().toISOString(),
+  }, null, 2));
+}
+
 // ─── Lógica principal ─────────────────────────────────────────────────────────
 async function verificarEEnviarAlertas() {
   if (DESIGNERS.length === 0) {
@@ -216,18 +239,20 @@ async function verificarEEnviarAlertas() {
   console.log(`📧 Designers: ${DESIGNERS.join(', ')}\n`);
 
   let enviados = 0;
-  let rodizioIndex = 0;
+  let rodizioIndex = lerRodizioIndex();
+  let ultimaResponsavel = null;
 
   for (const evento of EVENTOS) {
     const dias = diasAte(evento.mes, evento.dia);
 
-    if (dias !== 0) {
+    if (dias === 5) {
       console.log(`🔔 Alerta: "${evento.nome}" em ${dias} dias (${formatarDataCurta(evento.mes, evento.dia)})`);
 
       const responsavelIndex = rodizioIndex % DESIGNERS.length;
       const responsavel = DESIGNERS[responsavelIndex];
       const demais = DESIGNERS.filter((_, i) => i !== responsavelIndex);
       rodizioIndex++;
+      ultimaResponsavel = responsavel;
 
       console.log(`  👩‍🎨 Responsável sorteada: ${responsavel}`);
 
@@ -249,6 +274,12 @@ async function verificarEEnviarAlertas() {
     } else if (dias > 0 && dias <= 10) {
       console.log(`   · "${evento.nome}" — faltam ${dias} dias (${formatarDataCurta(evento.mes, evento.dia)})`);
     }
+  }
+
+  // Salva o índice atualizado para persistir entre execuções
+  if (ultimaResponsavel) {
+    salvarRodizioIndex(rodizioIndex, ultimaResponsavel);
+    console.log(`💾 Rodízio salvo: próxima será ${DESIGNERS[rodizioIndex % DESIGNERS.length]}`);
   }
 
   console.log(`\n✨ Concluído. ${enviados} alerta(s) enviado(s).`);

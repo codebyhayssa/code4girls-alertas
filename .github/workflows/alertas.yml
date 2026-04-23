@@ -33,7 +33,7 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           DESIGNERS_EMAILS: ${{ secrets.DESIGNERS_EMAILS }}
 
-      - name: Salvar rodizio no repositorio
+      - name: Salvar rodízio no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
