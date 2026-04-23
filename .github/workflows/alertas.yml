@@ -1,0 +1,30 @@
+name: Alertas Code4Girl
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  enviar-alertas:
+    runs-on: ubuntu-latest
+    name: Verificar e enviar alertas de arte
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Executar script de alertas
+        run: node src/alertas.js
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          DESIGNERS_EMAILS: ${{ secrets.DESIGNERS_EMAILS }}

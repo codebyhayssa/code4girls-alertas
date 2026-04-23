@@ -1,0 +1,12 @@
+{
+  "name": "code4girl-alertas",
+  "version": "1.0.0",
+  "description": "Alertas automáticos de arte para o calendário Code4Girl 2026",
+  "main": "src/alertas.js",
+  "scripts": {
+    "start": "node src/alertas.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.13"
+  }
+}
