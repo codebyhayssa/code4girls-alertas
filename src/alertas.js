@@ -3,9 +3,20 @@ const nodemailer = require('nodemailer');
 // ─── Configuração ────────────────────────────────────────────────────────────
 const ANO = 2026;
 
+const NOMES = {
+  '2024001482@ifam.edu.br': 'Manoel',
+  'joaosalignacvictor@gmail.com': 'João',
+  '2023002823@ifam.edu.br': 'Fernanda',
+  'hayssa.cunhaa@gmail.com': 'Hayssa',
+};
+
 const DESIGNERS = process.env.DESIGNERS_EMAILS
   ? process.env.DESIGNERS_EMAILS.split(',').map(e => e.trim())
   : [];
+
+function nomeDesigner(email) {
+  return NOMES[email] || email;
+}
 
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
@@ -171,7 +182,7 @@ function gerarHtml(evento, diasRestantes, responsavel) {
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9f0f4;border-radius:10px;margin-bottom:20px">
               <tr><td style="padding:14px 18px">
                 <div style="font-size:11px;color:#993556;text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px">Responsável pela arte</div>
-                <div style="font-size:15px;font-weight:600;color:#D4537E">${responsavel}</div>
+                <div style="font-size:15px;font-weight:600;color:#D4537E">${nomeDesigner(responsavel)}</div>
                 <div style="font-size:12px;color:#72243E;margin-top:3px">Você foi sorteada para criar o post deste evento.</div>
               </td></tr>
             </table>
