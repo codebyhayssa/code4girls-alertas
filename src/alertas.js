@@ -36,7 +36,7 @@ const EVENTOS = [
   { mes: 4,  dia: 25, nome: 'Dia do Geek',                    desc: 'Identidade geek feminina é forte no Code4Girl.',                                         tipo: 'Cultura tech' },
   { mes: 5,  dia: 6,  nome: 'Dia do Python',                  desc: 'Python é a linguagem mais acessível para iniciantes — muito usada no Code4Girl.',        tipo: 'Programação' },
   { mes: 5,  dia: 12, nome: 'Dia do Dev Mobile',              desc: 'Mobile é área de alta empregabilidade para mulheres devs.',                              tipo: 'Desenvolvimento Web' },
-  { mes: 5,  dia: 27, nome: 'Dia Mundial do UX',              desc: 'UX e design centrado em pessoas: área com muitas mulheres.',                             tipo: 'Design' },
+  { mes: 5,  dia: 29, nome: 'Dia Mundial do UX',              desc: 'UX e design centrado em pessoas: área com muitas mulheres.',                             tipo: 'Design' },
   { mes: 5,  dia: 28, nome: 'Dia do Dev Front-end',           desc: 'Front-end é uma das entradas mais comuns de mulheres em tech.',                          tipo: 'Desenvolvimento Web' },
   { mes: 6,  dia: 17, nome: 'Dia do Emoji',                   desc: 'Comunicação digital e cultura — muito aderente ao público.',                             tipo: 'Design' },
   { mes: 6,  dia: 20, nome: 'Dia do Game',                    desc: 'Mulheres na indústria de games é pauta crescente e relevante.',                          tipo: 'Cultura tech' },
