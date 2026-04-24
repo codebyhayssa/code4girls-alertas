@@ -112,9 +112,9 @@ function gerarHtml(evento, diasRestantes, responsavel) {
                   <div style="font-size:22px;font-weight:600;color:#fff;line-height:1.2">${evento.nome}</div>
                 </td>
                 <td align="right" style="vertical-align:top">
-                  <div style="background:#993556;border-radius:50%;width:52px;height:52px;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.1">
-                    <div style="color:#fff;font-size:18px;font-weight:700">${diasRestantes}</div>
-                    <div style="color:#F4C0D1;font-size:9px;margin-top:2px">dias</div>
+                  <div style="background:#993556;border-radius:50%;width:52px;height:52px;text-align:center;padding-top:10px">
+                    <div style="color:#fff;font-size:18px;font-weight:700;line-height:1">${diasRestantes}</div>
+                    <div style="color:#F4C0D1;font-size:9px">dias</div>
                   </div>
                 </td>
               </tr>
