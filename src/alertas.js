@@ -14,6 +14,10 @@ const DESIGNERS = process.env.DESIGNERS_EMAILS
   ? process.env.DESIGNERS_EMAILS.split(',').map(e => e.trim())
   : [];
 
+const COPIA_FIXA = process.env.COPIA_FIXA
+  ? process.env.COPIA_FIXA.split(',').map(e => e.trim())
+  : [];
+
 function nomeDesigner(email) {
   return NOMES[email] || email;
 }
@@ -272,7 +276,7 @@ async function verificarEEnviarAlertas() {
         await transporter.sendMail({
           from: `Code4Girl Alertas <${GMAIL_USER}>`,
           to: responsavel,
-          cc: demais.length > 0 ? demais.join(',') : undefined,
+          cc: [...demais, ...COPIA_FIXA].length > 0 ? [...demais, ...COPIA_FIXA].join(',') : undefined,
           replyTo: GMAIL_USER,
           subject: `[Code4Girl] Você foi sorteada! Arte do post — ${evento.nome} (${formatarDataCurta(evento.mes, evento.dia)})`,
           html: gerarHtml(evento, dias, responsavel),
