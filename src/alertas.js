@@ -110,7 +110,7 @@ function gerarHtml(evento, diasRestantes, responsavel) {
               <tr>
                 <td>
                   <div style="font-size:11px;font-weight:600;color:#F4C0D1;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Code4Girl · Alerta de Arte</div>
-                  <div style="font-size:22px;font-weight:600;color:#fff;line-height:1.2;font-family:'Changa One',Impact,sans-serif">${evento.nome}</div>
+                  <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;font-family:Impact,'Arial Narrow',Arial,sans-serif;letter-spacing:1px;text-transform:uppercase">${evento.nome}</div>
                 </td>
                 <td align="right" style="vertical-align:top">
                   <div style="background:#993556;border-radius:50%;width:52px;height:52px;text-align:center;padding-top:10px">
