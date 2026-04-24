@@ -96,6 +96,7 @@ function gerarHtml(evento, diasRestantes, responsavel) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alerta Code4Girl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body style="margin:0;padding:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 16px">
@@ -109,7 +110,7 @@ function gerarHtml(evento, diasRestantes, responsavel) {
               <tr>
                 <td>
                   <div style="font-size:11px;font-weight:600;color:#F4C0D1;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Code4Girl · Alerta de Arte</div>
-                  <div style="font-size:22px;font-weight:600;color:#fff;line-height:1.2">${evento.nome}</div>
+                  <div style="font-size:22px;font-weight:600;color:#fff;line-height:1.2;font-family:'Changa One',Impact,sans-serif">${evento.nome}</div>
                 </td>
                 <td align="right" style="vertical-align:top">
                   <div style="background:#993556;border-radius:50%;width:52px;height:52px;text-align:center;padding-top:10px">
